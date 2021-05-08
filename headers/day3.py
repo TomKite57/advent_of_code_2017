@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+# pip install aoc-tools-dannyboywoop
 from aoc_tools import Advent_Timer
 from math import ceil, floor, sqrt
 

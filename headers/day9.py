@@ -6,37 +6,56 @@ from aoc_tools import Advent_Timer
 
 def readfile(filename):
     with open(filename, 'r') as file:
-        return process_data(file.read().strip())
+        return file.read().strip()
 
 
-def process_data(data):
-    # replace all unimportant chars
-    print(data.count('!,'))
-    all_chars = set(data)
-    for char in all_chars:
-        if char in ['{', '}', '<', '>', '!', ',']:
-            continue
-        data = data.replace(char, 'o')
+class group:
+    def __init__(self, stream, start_ind=0, score=0):
+        self.contents = []
+        self.garbage_count = 0
+        self.end_ind = -1
+        self.start_ind = start_ind
+        self.score = score
+        ind = start_ind
 
-    # remove everything after a !
-    counter = 0
-    while counter < len(data):
-        if data[counter] == '!':
-            data = data[:counter] + data[counter+2:]
-            continue
-        counter += 1
-    return data
+        while ind < len(stream):
+
+            if stream[ind] == '{':
+                self.contents.append(group(stream, ind+1, self.score + 1))
+                ind = self.contents[-1].end_ind + 1
+                continue
+            if stream[ind] == '}':
+                self.end_ind = ind
+                return
+            if stream[ind] == '<':
+                ind += 1
+                while stream[ind] != '>':
+                    if stream[ind] == '!':
+                        ind += 2
+                        continue
+                    ind += 1
+                    self.garbage_count += 1
+                ind += 1
+                continue
+            ind += 1
+
+    def get_total_score(self):
+        return sum([g.get_total_score() for g in self.contents]) + self.score
+
+    def get_total_garbage(self):
+        return sum([g.get_total_garbage() for g in self.contents]) + self.garbage_count
+
 
 def part1(filename):
     data = readfile(filename)
-    #print(data)
-    #print("Solution: {}.".format())
+    my_group = group(data)
+    print("Solution: {}.".format(my_group.get_total_score()))
 
 
 def part2(filename):
-    pass
-    #data = readfile(filename)
-    #print("Solution: {}.".format())
+    data = readfile(filename)
+    my_group = group(data)
+    print("Solution: {}.".format(my_group.get_total_garbage()))
 
 
 if __name__ == "__main__":

@@ -70,21 +70,28 @@ class computer:
                 return rval
 
 
+def efficient_code(b, c):
+    # Help from Reddit!
+    rval = 0
+    for x in range(b, c+1, 17):
+    	for i in range(2, x):
+    		if x % i == 0:
+    			rval += 1
+    			break
+    return rval
+
+
 def part1(filename):
     data = readfile(filename)
     my_comp = computer(data)
     mul_counter = my_comp.run_till_fail_count_mul()
     print("Solution: {}.".format(mul_counter))
-    print("Solution: {}.".format(my_comp.registers['h']))
 
 
 def part2(filename):
-    return
     data = readfile(filename)
-    my_comp = computer(data)
-    my_comp.registers['a'] = 1
-    my_comp.run_till_fail()
-    print("Solution: {}.".format(my_comp.registers['h']))
+    ans = efficient_code(106700, 123700)
+    print("Solution: {}.".format(ans))
 
 
 if __name__ == "__main__":
@@ -102,8 +109,8 @@ if __name__ == "__main__":
 
 
 
-# b = 67*100 + 100000
-# c = 67*100 + 117000
+# b = 106700
+# c = 123700
 # f = 1
 # d = 2
 # e = 2
